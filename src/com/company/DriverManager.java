@@ -25,7 +25,12 @@ public class DriverManager {
         reporter = new ExtentHtmlReporter("./report.html");
         extentReportes = new ExtentReports();
         extentReportes.attachReporter(reporter);
+        //test logowania
         LoginTest();
+        //test rejestracji
+//        RegistrationTest();
+        //test rejestracji zawodów
+        RegistrationCompetitionTest();
     }
 
     public void LoginTest(){
@@ -42,8 +47,40 @@ public class DriverManager {
         }
         extentReportes.flush();
 
-//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("button-zaloguj")));
-
-
     }
+    public void RegistrationTest(){
+        ExtentTest logger = extentReportes.createTest("Registration Test");
+        logger.log(Status.INFO, "Rejestracja");
+        try {
+            mainDriver.findElement(By.id("redirect-to-registration")).click();
+            mainDriver.findElement(By.id("registration-input-login")).sendKeys("organizator3");
+            mainDriver.findElement(By.id("registration-input-password")).sendKeys("organizator3");
+            mainDriver.findElement(By.id("registration-input-password2")).sendKeys("organizator3");
+            mainDriver.findElement(By.id("button-registration")).click();
+            logger.log(Status.PASS, "Udało sie zarejestrować");
+        }
+        catch (Exception e){
+            logger.log(Status.FAIL, "Nie udalo sie zarejestrować");
+        }
+        extentReportes.flush();
+    }
+
+    public void RegistrationCompetitionTest(){
+        ExtentTest logger = extentReportes.createTest("Registration Competition Test");
+        logger.log(Status.INFO, "Rejestracja zawodów");
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("add-competitions-button")));
+            mainDriver.findElement(By.id("add-competitions-button")).click();
+            mainDriver.findElement(By.id("input-competition-date")).sendKeys("002021-03-02");
+            mainDriver.findElement(By.id("input-competition-name")).sendKeys("Mistrzostwa Wojewodztwa");
+            mainDriver.findElement(By.id("button-registration-competition")).click();
+
+            logger.log(Status.PASS, "Udało sie zarejestrować zawody");
+        }
+        catch (Exception e){
+            logger.log(Status.FAIL, "Nie udalo sie zarejestrować zawodów");
+        }
+        extentReportes.flush();
+    }
+
 }
